@@ -2,12 +2,11 @@
 #define NEWSLISTRETRIEVER_H
 
 #define URL_NEWSLIST "http://www.cnbeta.com/more.htm"
+#define URL_TOPICNEWS "http://www.cnbeta.com/topics/more.htm"
 
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
 #include <QtNetwork/QNetworkReply>
-
-#include "QJson/parser.h"
 
 class NewsListRetriever : public QObject
 {
@@ -36,7 +35,6 @@ private:
     QString m_type;
 
     QPointer<QNetworkReply> reply;
-    QJson::Parser parser;
 };
 
 #endif // NEWSLISTRETRIEVER_H

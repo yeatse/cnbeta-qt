@@ -62,9 +62,10 @@ void ArticleRetriever::slotLoadFinished(bool ok)
         result.insert("intro", introduction.findFirst("p").toPlainText());      // 简介
 
         QVariantList contentList;
+        QVariantMap contentMap;
         QWebElementCollection contents = articleContent.findFirst("div.content").findAll("p");
         foreach (QWebElement content, contents) {
-            QVariantMap contentMap;
+            contentMap.clear();
             QWebElement firstChild = content.firstChild();
             QString tagName = firstChild.tagName();
             if (tagName == "IMG"||tagName == "EMBED"){
@@ -75,21 +76,26 @@ void ArticleRetriever::slotLoadFinished(bool ok)
                 if (ff.tagName() == "IMG"){
                     contentMap.insert("type", "IMG");
                     contentMap.insert("content", ff.attribute("src"));
-                } else {
-                    contentMap.insert("type", "P");
-                    contentMap.insert("content", content.toPlainText());
                 }
-            } else {
+            } else if (tagName == "OBJECT"){
+                QWebElement embed = content.findFirst("embed");
+                if (!embed.isNull()){
+                    contentMap.insert("type", "EMBED");
+                    contentMap.insert("content", embed.attribute("src"));
+                }
+            }
+            if (contentMap.isEmpty()){
                 contentMap.insert("type", "P");
                 contentMap.insert("content", content.toPlainText());
             }
+            // IMG图片, EMBED视频, P文字
             contentList.append(contentMap);
         }
         result.insert("content", contentList);  // 内容
 
         QRegExp regexp("GV\\\.DETAIL.*SN:\"([^\"]*)\"");
         regexp.setMinimal(true);
-        if (webPage->mainFrame()->toPlainText().indexOf(regexp) > 0){
+        if (webPage->mainFrame()->toHtml().indexOf(regexp) > 0){
             result.insert("SN", regexp.cap(1)); // 序列号
         }
 
@@ -99,5 +105,5 @@ void ArticleRetriever::slotLoadFinished(bool ok)
 
 QUrl ArticleRetriever::articleUrl(const QString &sid) const
 {
-    return QUrl(QString(URL_ARTICLELIST).arg(sid));
+    return QUrl(QString(URL_ARTICLECONTENT).arg(sid));
 }

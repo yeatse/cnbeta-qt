@@ -1,23 +1,22 @@
-#ifndef ARTICLERETRIEVER_H
-#define ARTICLERETRIEVER_H
+#ifndef TOPICRETRIEVER_H
+#define TOPICRETRIEVER_H
 
-#define URL_ARTICLECONTENT "http://www.cnbeta.com/articles/%1.htm"
+#define URL_TOPICSLIST "http://www.cnbeta.com/topics.htm"
 
 #include <QtCore/QObject>
 #include <QtCore/QVariantMap>
-#include <QtCore/QUrl>
 #include <QtWebKit/QWebPage>
 
-class ArticleRetriever : public QObject
+class TopicRetriever : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool loading READ loading NOTIFY loadingChanged)
 
 public:
-    explicit ArticleRetriever(QObject *parent = 0);
-    ~ArticleRetriever();
+    explicit TopicRetriever(QObject *parent = 0);
+    ~TopicRetriever();
 
-    Q_INVOKABLE void sendRequest(const QString &sid);
+    Q_INVOKABLE void sendRequest(const int &pageNumber);
 
     bool loading() const;
 
@@ -30,11 +29,8 @@ private slots:
     void slotLoadFinished(bool ok);
 
 private:
-    QUrl articleUrl(const QString &sid) const;
-
-private:
     bool m_loading;
     QWebPage* webPage;
 };
 
-#endif // ARTICLERETRIEVER_H
+#endif // TOPICRETRIEVER_H

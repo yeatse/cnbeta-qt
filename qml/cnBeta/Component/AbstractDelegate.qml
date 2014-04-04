@@ -9,7 +9,7 @@ Item {
     signal pressAndHold;
 
     implicitWidth: screen.width;
-    implicitHeight: constant.graphicSizeLarge;
+    implicitHeight: constant.thumbnailSize;
 
     BorderImage {
         id: background;

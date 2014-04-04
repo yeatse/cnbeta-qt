@@ -38,14 +38,12 @@ MyPage {
             }
         }
         ToolButton {
+            iconSource: "gfx/applications.svg";
+            onClicked: pageStack.push(Qt.resolvedUrl("TopicListPage.qml"))
+        }
+        ToolButton {
             iconSource: "toolbar-menu";
         }
-    }
-
-    ViewHeader {
-        id: viewHeader;
-        title: "全部分类";
-        onClicked: view.scrollToTop();
     }
 
     NewsList {
@@ -78,6 +76,12 @@ MyPage {
         }
     }
 
+    ViewHeader {
+        id: viewHeader;
+        title: "全部分类";
+        onClicked: view.scrollToTop();
+    }
+
     SilicaListView {
         id: view;
 
@@ -85,7 +89,7 @@ MyPage {
         property int nextPageThreshold: 20;
 
         onAtYEndChanged: {
-            if (atYEnd){
+            if (atYEnd && count > 0){
                 nextPageRequested = true;
             }
         }

@@ -11,12 +11,16 @@ INCLUDEPATH += src
 HEADERS += \
     src/newslistretriever.h \
     src/articleretriever.h \
-    src/commentretriever.h
+    src/commentretriever.h \
+    src/utility.h \
+    src/topicretriever.h
 
 SOURCES += main.cpp \
     src/newslistretriever.cpp \
     src/articleretriever.cpp \
-    src/commentretriever.cpp
+    src/commentretriever.cpp \
+    src/utility.cpp \
+    src/topicretriever.cpp
 
 folder_symbian3.source = qml/cnBeta
 folder_symbian3.target = qml

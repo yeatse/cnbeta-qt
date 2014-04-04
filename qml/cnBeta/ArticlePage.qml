@@ -17,6 +17,10 @@ MyPage {
             iconSource: "toolbar-back";
             onClicked: pageStack.pop();
         }
+        ToolButton {
+            iconSource: "gfx/instant_messenger_chat.svg";
+            enabled: !network.loading && !comment.loading;
+        }
     }
 
     Article {
@@ -32,14 +36,25 @@ MyPage {
                     textComp.createObject(contentCol, { "text": value.content });
                 } else if (value.type === "IMG"){
                     imageComp.createObject(contentCol, { "source": value.content });
+                } else if (value.type === "EMBED"){
+                    embedComp.createObject(contentCol, { "source": value.content });
                 }
             }
             data.content.forEach(parse);
+            comment.sendRequest(sid, data.SN, 1);
+        }
+    }
+
+    Comment {
+        id: comment;
+        onDataReceived: {
+            viewCountText.text = data.view_num+"次阅读";
         }
     }
 
     ViewHeader {
         id: viewHeader;
+        title: sid;
         onClicked: view.scrollToTop();
     }
 
@@ -158,7 +173,42 @@ MyPage {
             Image {
                 id: thumbnailImage;
                 anchors.horizontalCenter: parent.horizontalCenter;
-                source: "gfx/placeholder.png";
+                source: "gfx/ImageBg.png";
+            }
+            MouseArea {
+                anchors.fill: parent;
+                onClicked: {
+                    var prop = { imageUrl: utility.fixUrl(parent.source) }
+                    pageStack.push(Qt.resolvedUrl("ImagePage.qml"), prop);
+                }
+            }
+        }
+    }
+
+    Component {
+        id: embedComp;
+        Item {
+            property string source;
+            width: contentCol.width;
+            height: 75;
+            Row {
+                anchors.horizontalCenter: parent.horizontalCenter;
+                spacing: constant.paddingXLarge;
+                Image {
+                    source: "gfx/video.png";
+                }
+                Text {
+                    text: "点击播放视频"
+                    anchors.verticalCenter: parent.verticalCenter;
+                    font: constant.titleFont;
+                    color: constant.colorMid;
+                }
+            }
+            MouseArea {
+                anchors.fill: parent;
+                onClicked: {
+                    signalCenter.showMessage(parent.source);
+                }
             }
         }
     }
